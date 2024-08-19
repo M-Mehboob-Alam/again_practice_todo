@@ -1,5 +1,9 @@
 import React, { useState } from 'react'
 import './Todo.css'
+import toast from'react-hot-toast';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faPlus, faTrash } from '@fortawesome/free-solid-svg-icons'
+import TodoItem from '../TodoItem/TodoItem';
 const Todo = () => {
     const [todoList, setTodoList] = useState([]);
     const [inputValue, setInputValue] = useState('');
@@ -8,8 +12,13 @@ const Todo = () => {
         console.log(inputValue);
     }
     const clickButtonHandler = () => {
+        if (inputValue === '') {
+            alert('Please enter a Todo');
+            return '';            
+        }
         setTodoList([...todoList, inputValue]);
         setInputValue('');
+        toast.success('Todo Added Successfully');
     }
     const todoListHandler = () =>{
         setTodoList([...todoList, inputValue]);
@@ -19,12 +28,16 @@ const Todo = () => {
             return name !=item;
         });
         setTodoList(newTodoList);
+        toast.success('Todo Deleted Successfully');
     }
+    
   return (
     <div className='todo_wrapper'>
-        <h1>Todo</h1>
+        
         <input type="text" className='add_todo' value={inputValue} onChange={inputValueHandler} placeholder='Enter your todo' />
-        <button onClick={clickButtonHandler}>Add</button>
+        <button onClick={clickButtonHandler}>
+        <FontAwesomeIcon icon={faPlus} />
+            Add New Todo Item</button>
 
         <div className='todo_list'>
             <h1>Todo List</h1>
@@ -34,9 +47,14 @@ const Todo = () => {
                 todoList.length > 0  ? 
                 todoList.map((item, index) => {
                     return (
-                        <li className='todo_item' key={index} onClick={() => delHandler(item)}>
-                            {item}
-                        </li>
+
+                            <TodoItem key={index} onClick={() => delHandler(item)} item={item}/>
+                        // <li className='todo_item' key={index} onClick={() => delHandler(item)}>
+                        //     <div className="todo_span">
+                        //         <span className='todo_text'>{item}</span>
+                        //         <span className='todo_delete'><FontAwesomeIcon icon={faTrash} /></span>
+                        //     </div>
+                        // </li>
                     )
                 })  
                 : (
